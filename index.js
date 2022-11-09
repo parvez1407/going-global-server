@@ -17,13 +17,21 @@ async function run() {
     try {
         const serviceCollection = client.db('goingGlobal').collection('services');
 
-        // get services from database 
+        // get limit services from database 
         app.get('/services', async (req, res) => {
+            const query = {};
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.limit(3).toArray()
+            res.send(services);
+        })
+        // get all services from database 
+        app.get('/allServices', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray()
             res.send(services);
         })
+
 
         // add services in database
         app.post('/services', async (req, res) => {
