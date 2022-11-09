@@ -15,7 +15,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-
+        const serviceCollection = client.db('goingGlobal').collection('services');
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service);
+            res.send(result)
+        })
     }
     finally {
 
