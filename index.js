@@ -66,6 +66,35 @@ async function run() {
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
+
+        // review single data get for update api 
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const review = await reviewCollection.findOne(query);
+            res.send(review);
+        })
+        // review single data put for update api
+        app.put('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const review = req.body;
+            const option = { upsert: true };
+            const updatedReview = {
+                $set: {
+                    serviceName: review.serviceName,
+                    name: review.name,
+                    reviewDesc: review.reviewDesc,
+                    userRating: review.userRating,
+                    email: review.email,
+                    phone: review.phone,
+                    date: review.date
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, updatedReview, option);
+            res.send(result);
+        })
+
         // review Delete
         app.delete('/reviews/:id', async (req, res) => {
             const id = req.params.id;
